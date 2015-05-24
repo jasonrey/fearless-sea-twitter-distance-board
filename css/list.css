@@ -1,0 +1,136 @@
+body {
+	font-family: Helvetica, Roboto, 'Segoe UI', Calibri, sans-serif;;
+}
+
+.structure {
+	display: none;
+}
+
+.wrapper {
+	text-align: center;
+	font-size: 0;
+}
+
+.container {
+	display: inline-block;
+}
+
+.container .header {
+	font-size: 20px;
+	font-weight: bold;
+	padding: 10px 0;
+}
+
+.container .subheader {
+	font-size: 12px;
+	padding: 0 0 10px 0;
+	color: #8899A6;
+}
+
+.container .list {
+	display: inline-block;
+	text-align: left;
+	border-bottom: 1px solid #e1e8ed;
+}
+
+.container .list .item {
+	padding: 20px 10px;
+	border-top: 1px solid #e1e8ed;
+}
+
+.container .list .item:hover {
+	background-color: #f5f8fa;
+}
+
+.container .list .item .avatar {
+	display: inline-block;
+	width: 48px;
+	height: 48px;
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+.container .list .item .avatar img {
+	width: 48px;
+	height: 48px;
+}
+
+.container .list .item .content {
+	display: inline-block;
+	vertical-align: top;
+	cursor: default;
+	margin: 4px 0 0 10px;
+	width: 350px;
+	font-size: 16px;
+}
+
+.container .list .item .content .user {
+	display: inline-block;
+	text-decoration: none;
+	vertical-align: top;
+}
+
+.container .list .item .content .user span {
+	color: #000;
+}
+
+.container .list .item .content .user span:hover {
+	color: #3b94d9;
+}
+
+.container .list .item .content .user .name {
+	font-weight: bold;
+}
+
+.container .list .item .content .user .screenname {
+	font-size: 14px;
+	color: #8899A6;
+}
+
+.container .list .item .content .metas {
+	margin: 5px 0 0 0;
+}
+
+.container .list .item .content .metas .meta {
+	display: inline-block;
+	color: #697882;
+	margin: 0 10px 0 0;
+}
+
+.container .list .item .content .metas .distance:hover {
+	color: #5c913b;
+}
+
+.container .list .item .content .metas .count:hover {
+	color: #ffac33;
+}
+
+.container .more {
+	display: block;
+	font-weight: bold;
+	text-decoration: none;
+	transition: all .15s ease-in-out;
+	color: #66757f;
+	font-size: 14px;
+	margin: 10px 0 0 0;
+	border: 1px solid #e1e8ed;
+	border-radius: 5px;
+	padding: 10px 0;
+}
+
+.container .more .loader {
+	display: none;
+}
+
+.container .more.loading .loader {
+	display: block;
+}
+
+.container .more.loading .text {
+	display: none;
+}
+
+.container .more:hover {
+	background-color: #009999;
+	color: #fff;
+}
