@@ -4,155 +4,154 @@
 
 class Model
 {
-	public $tablename;
+    public $tablename;
 
-	public static $db;
-	public static $aaqdb;
+    public static $db;
 
-	public $active = 'db';
+    public $active = 'db';
 
-	public function __construct()
-	{
-		if (empty(self::$db)) {
-			self::$db = Lib::db();
-		}
-	}
+    public function __construct()
+    {
+        if (empty(self::$db)) {
+            self::$db = Lib::db();
+        }
+    }
 
-	public function getResult($sql, $bindTable = true)
-	{
-		$result = self::${$this->active}->query($sql);
+    public function getResult($sql, $bindTable = true)
+    {
+        $result = self::${$this->active}->query($sql);
 
-		if ($result === false) {
-			throw new Exception(self::${$this->active}->error);
-		}
+        if ($result === false) {
+            throw new Exception(self::${$this->active}->error);
+        }
 
-		if ($result->num_rows === 0) {
-			return array();
-		}
+        if ($result->num_rows === 0) {
+            return array();
+        }
 
-		$tables = array();
+        $tables = array();
 
-		if (!empty($this->tablename) && $bindTable) {
-			while ($row = $result->fetch_object()) {
-				$table = Lib::table($this->tablename);
-				$table->bind($row);
+        if (!empty($this->tablename) && $bindTable) {
+            while ($row = $result->fetch_object()) {
+                $table = Lib::table($this->tablename);
+                $table->bind($row);
 
-				$tables[] = $table;
-			}
-		} else {
-			while ($row = $result->fetch_object()) {
-				$tables[] = $row;
-			}
-		}
+                $tables[] = $table;
+            }
+        } else {
+            while ($row = $result->fetch_object()) {
+                $tables[] = $row;
+            }
+        }
 
-		return $tables;
-	}
+        return $tables;
+    }
 
-	public function getRow($sql, $bindTable = true)
-	{
-		$result = self::${$this->active}->query($sql);
+    public function getRow($sql, $bindTable = true)
+    {
+        $result = self::${$this->active}->query($sql);
 
-		if ($result === false) {
-			throw new Exception(self::${$this->active}->error);
-		}
+        if ($result === false) {
+            throw new Exception(self::${$this->active}->error);
+        }
 
-		if ($result->num_rows === 0) {
-			return array();
-		}
+        if ($result->num_rows === 0) {
+            return array();
+        }
 
-		$tables = array();
+        $tables = array();
 
-		if (!empty($this->tablename) && $bindTable) {
-			while ($row = $result->fetch_object()) {
-				$table = Lib::table($this->tablename);
-				$table->bind($row);
+        if (!empty($this->tablename) && $bindTable) {
+            while ($row = $result->fetch_object()) {
+                $table = Lib::table($this->tablename);
+                $table->bind($row);
 
-				return $table;
-			}
-		} else {
-			while ($row = $result->fetch_object()) {
-				return $row;
-			}
-		}
-	}
+                return $table;
+            }
+        } else {
+            while ($row = $result->fetch_object()) {
+                return $row;
+            }
+        }
+    }
 
-	public function getColumn($sql)
-	{
-		$result = self::${$this->active}->query($sql);
+    public function getColumn($sql)
+    {
+        $result = self::${$this->active}->query($sql);
 
-		if ($result === false) {
-			throw new Exception(self::${$this->active}->error);
-		}
+        if ($result === false) {
+            throw new Exception(self::${$this->active}->error);
+        }
 
-		if ($result->num_rows === 0) {
-			return array();
-		}
+        if ($result->num_rows === 0) {
+            return array();
+        }
 
-		$data = array();
+        $data = array();
 
-		while ($row = $result->fetch_array()) {
-			$data[] = $row[0];
-		}
+        while ($row = $result->fetch_array()) {
+            $data[] = $row[0];
+        }
 
-		return $data;
-	}
+        return $data;
+    }
 
-	public function getCell($sql)
-	{
-		$result = self::${$this->active}->query($sql);
+    public function getCell($sql)
+    {
+        $result = self::${$this->active}->query($sql);
 
-		if ($result === false) {
-			throw new Exception(self::${$this->active}->error);
-		}
+        if ($result === false) {
+            throw new Exception(self::${$this->active}->error);
+        }
 
-		if ($result->num_rows === 0) {
-			return null;
-		}
+        if ($result->num_rows === 0) {
+            return null;
+        }
 
-		$data = null;
+        $data = null;
 
-		while ($row = $result->fetch_array()) {
-			$data = $row[0];
-			break;
-		}
+        while ($row = $result->fetch_array()) {
+            $data = $row[0];
+            break;
+        }
 
-		return $data;
-	}
+        return $data;
+    }
 
-	public function buildWhere($conditions = array())
-	{
-		if (empty($conditions)) {
-			return '';
-		}
+    public function buildWhere($conditions = array())
+    {
+        if (empty($conditions)) {
+            return '';
+        }
 
-		return ' WHERE ' . implode(' AND ', $conditions);
-	}
+        return ' WHERE ' . implode(' AND ', $conditions);
+    }
 
-	public function buildOrder($options = array(), $defaultOrder = 'id', $defaultDirection = 'asc')
-	{
-		if (isset($options['order']) && is_array($options['order'])) {
-			$string = ' ORDER BY ';
+    public function buildOrder($options = array(), $defaultOrder = 'id', $defaultDirection = 'asc')
+    {
+        if (isset($options['order']) && is_array($options['order'])) {
+            $string = ' ORDER BY ';
 
-			$orders = array();
+            $orders = array();
 
-			foreach ($options['order'] as $i => $o) {
-				$orders[] = self::${$this->active}->quoteName($o) . ' ' . (isset($options['direction'][$i]) ? $options['direction'][$i] : $defaultDirection);
-			}
+            foreach ($options['order'] as $i => $o) {
+                $orders[] = self::${$this->active}->quoteName($o) . ' ' . (isset($options['direction'][$i]) ? $options['direction'][$i] : $defaultDirection);
+            }
 
-			$string .= implode(',', $orders);
+            $string .= implode(',', $orders);
 
-			return $string;
-		}
+            return $string;
+        }
 
-		return ' ORDER BY ' . self::${$this->active}->quoteName(isset($options['order']) ? $options['order'] : $defaultOrder) . ' ' . (isset($options['direction']) ? $options['direction'] : $defaultDirection);
-	}
+        return ' ORDER BY ' . self::${$this->active}->quoteName(isset($options['order']) ? $options['order'] : $defaultOrder) . ' ' . (isset($options['direction']) ? $options['direction'] : $defaultDirection);
+    }
 
-	public function buildLimit($options = array(), $defaultStart = 0, $defaultLimit = 0)
-	{
-		if (empty($options['limit']) && empty($defaultLimit)) {
-			return '';
-		}
+    public function buildLimit($options = array(), $defaultStart = 0, $defaultLimit = 0)
+    {
+        if (empty($options['limit']) && empty($defaultLimit)) {
+            return '';
+        }
 
-		return ' LIMIT ' . (isset($options['start']) ? $options['start'] : $defaultStart) . ',' . (!empty($options['limit']) ? $options['limit'] : $defaultLimit);
-	}
+        return ' LIMIT ' . (isset($options['start']) ? $options['start'] : $defaultStart) . ',' . (!empty($options['limit']) ? $options['limit'] : $defaultLimit);
+    }
 }

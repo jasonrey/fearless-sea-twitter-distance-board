@@ -4,119 +4,118 @@
 
 class DB
 {
-	public static $instance = null;
-	public static $aaqinstance = null;
+    private static $instance = null;
 
-	public $connection = null;
+    private $connection = null;
 
-	public static function init()
-	{
-		if (empty(self::$instance)) {
-			require_once(dirname(__FILE__) . '/dbconfig.php');
+    public static function init()
+    {
+        if (empty(self::$instance)) {
+            require_once(dirname(__FILE__) . '/dbconfig.php');
 
-			$connection = new mysqli($servername, $username, $password, $dbname);
+            $connection = new mysqli($servername, $username, $password, $dbname);
 
-			if ($connection->connect_error) {
-				throw new Exception('Connection failed: ' . $connection->connect_error);
-			}
+            if ($connection->connect_error) {
+                throw new Exception('Connection failed: ' . $connection->connect_error);
+            }
 
-			$connection->set_charset('utf8');
+            $connection->set_charset('utf8');
 
-			$instance = new self;
+            $instance = new self;
 
-			$instance->connection = $connection;
+            $instance->connection = $connection;
 
-			self::$instance = $instance;
-		}
+            self::$instance = $instance;
+        }
 
-		return self::$instance;
-	}
+        return self::$instance;
+    }
 
-	public function quote($value)
-	{
-		if (is_array($value)) {
-			foreach ($value as $k => $v) {
-				$value[$k] = $this->quote($v);
-			}
+    public function quote($value)
+    {
+        if (is_array($value)) {
+            foreach ($value as $k => $v) {
+                $value[$k] = $this->quote($v);
+            }
 
-			return $value;
-		} else {
-			return '\'' . $this->escape($value) . '\'';
-		}
-	}
+            return $value;
+        } else {
+            return '\'' . $this->escape($value) . '\'';
+        }
+    }
 
-	public function q($value)
-	{
-		return $this->quote($value);
-	}
+    public function q($value)
+    {
+        return $this->quote($value);
+    }
 
-	public function quoteName($name, $as = null)
-	{
-		if (is_string($name)) {
-			$quotedName = $this->quoteNameStr(explode('.', $name));
+    public function quoteName($name, $as = null)
+    {
+        if (is_string($name)) {
+            $quotedName = $this->quoteNameStr(explode('.', $name));
 
-			$quotedAs = '';
+            $quotedAs = '';
 
-			if (!is_null($as)) {
-				settype($as, 'array');
-				$quotedAs .= ' AS ' . $this->quoteNameStr($as);
-			}
+            if (!is_null($as)) {
+                settype($as, 'array');
+                $quotedAs .= ' AS ' . $this->quoteNameStr($as);
+            }
 
-			return $quotedName . $quotedAs;
-		} else {
-			$fin = array();
+            return $quotedName . $quotedAs;
+        } else {
+            $fin = array();
 
-			if (is_null($as)) {
-				foreach ($name as $str) {
-					$fin[] = $this->quoteName($str);
-				}
+            if (is_null($as)) {
+                foreach ($name as $str) {
+                    $fin[] = $this->quoteName($str);
+                }
 
-				return $fin;
-			}
+                return $fin;
+            }
 
-			if (is_array($name) && (count($name) == count($as))) {
-				$count = count($name);
+            if (is_array($name) && (count($name) == count($as))) {
+                $count = count($name);
 
-				for ($i = 0; $i < $count; $i++) {
-					$fin[] = $this->quoteName($name[$i], $as[$i]);
-				}
+                for ($i = 0; $i < $count; $i++) {
+                    $fin[] = $this->quoteName($name[$i], $as[$i]);
+                }
 
-				return $fin;
-			}
-		}
-	}
+                return $fin;
+            }
+        }
+    }
 
-	public function qn($name, $as = null)
-	{
-		return $this->quoteName($name, $as);
-	}
+    public function qn($name, $as = null)
+    {
+        return $this->quoteName($name, $as);
+    }
 
-	protected function quoteNameStr($array)
-	{
-		$parts = array();
+    protected function quoteNameStr($array)
+    {
+        $parts = array();
 
-		foreach ($array as $part) {
-			$parts[] = '`' . $part . '`';
-		}
+        foreach ($array as $part) {
+            $parts[] = '`' . $part . '`';
+        }
 
-		return implode('.', $parts);
-	}
+        return implode('.', $parts);
+    }
 
-	public function escape($text) {
-		return $this->connection->real_escape_string($text);
-	}
+    public function escape($text) {
+        return $this->connection->real_escape_string($text);
+    }
 
-	public function disconnect() {
-		return $this->connection->close();
-	}
+    public function disconnect() {
+        return $this->connection->close();
+    }
 
-	public function __call($name, $arguments)
-	{
-		return call_user_func_array(array($this->connection, $name), $arguments);
-	}
+    public function __call($name, $arguments)
+    {
+        return call_user_func_array(array($this->connection, $name), $arguments);
+    }
 
-	public function __get($name)
-	{
-		return $this->connection->$name;
-	}
+    public function __get($name)
+    {
+        return $this->connection->$name;
+    }
 }
